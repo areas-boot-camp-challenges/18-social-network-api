@@ -22,7 +22,7 @@ module.exports = {
 	deleteThought (req, res) {
 		res.send(`deleteThought`)
 	},
-	// GET /api/thoughts/:thoughtId/reactions/:reactionId.
+	// POST /api/thoughts/:thoughtId/reactions/:reactionId.
 	addReaction (req, res) {
 		res.send(`addReaction`)
 	},

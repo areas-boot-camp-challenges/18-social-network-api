@@ -20,7 +20,7 @@ userRouter
 	.put(`/:userId`, updateUser)
 	.delete(`/:userId`, deleteUser)
 
-// User friend routes.
+// Friend routes.
 userRouter
 	.post(`/:userId/friends/:friendId`, addFriend)
 	.delete(`/:userId/friends/:friendId`, deleteFriend)

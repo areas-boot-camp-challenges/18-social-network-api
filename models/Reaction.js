@@ -1,11 +1,12 @@
 // Dependencies.
-const { Schema, model } = require(`mongoose`)
+const { Schema, Types } = require(`mongoose`)
 
 // Schema.
 const reactionSchema = new Schema(
 	{
 		reactionId: {
-			// to-do
+			type: Types.ObjectId,
+			default: () => new Types.ObjectId(),
 		},
 		reactionBody: {
 			type: String,
@@ -33,7 +34,4 @@ reactionSchema
 		return Date(this.createdAt).toLocaleString()
 	})
 
-// Model.
-const Reaction = model(`Reaction`, reactionSchema)
-
-module.exports = Reaction
+module.exports = reactionSchema

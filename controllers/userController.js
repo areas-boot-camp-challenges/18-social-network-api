@@ -1,5 +1,5 @@
 // Models.
-
+const { User } = require(`../models`)
 
 module.exports = {
 	// GET /api/users.
@@ -7,13 +7,25 @@ module.exports = {
 		res.send(`getUsers`)
 	},
 	// GET /api/users/:userId.
-	getUser (req, res) {
-		res.send(`getUser`)
+	async getUser (req, res) {
+		try {
+			const user = await User.findOne({ _id: req.params.userId})
+			res.send(user)
+		} catch (err) {
+			res.status(500).json(err)
+		}
 	},
+
 	// POST /api/users.
-	addUser (req, res) {
-		res.send(`addUser`)
+	async addUser (req, res) {
+		try {
+			const user = await User.create(req.body)
+			res.status(201).json(user)
+		} catch (err) {
+			res.status(500).json(err)
+		}
 	},
+
 	// PUT /api/users/:userId.
 	updateUser (req, res) {
 		res.send(`updateUser`)
@@ -22,7 +34,7 @@ module.exports = {
 	deleteUser (req, res) {
 		res.send(`deleteUser`)
 	},
-	// GET /api/users/:userId/friends/:friendId.
+	// POST /api/users/:userId/friends/:friendId.
 	addFriend (req, res) {
 		res.send(`addFriend`)
 	},

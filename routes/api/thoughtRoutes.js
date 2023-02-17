@@ -20,7 +20,7 @@ thoughtRouter
 	.put(`/:thoughtId`, updateThought)
 	.delete(`/:thoughtId`, deleteThought)
 
-// Thought reaction routes.
+// Reaction routes.
 thoughtRouter
 	.post(`/:thoughtId/reactions/:reactionId`, addReaction)
 	.delete(`/:thoughtId/reactions/:reactionId`, deleteReaction)
