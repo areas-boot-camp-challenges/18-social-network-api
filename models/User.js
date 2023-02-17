@@ -35,6 +35,7 @@ const userSchema = new Schema(
 			getters: true,
 			virtuals: true,
 		},
+		id: false,
 	},
 )
 
@@ -42,7 +43,11 @@ const userSchema = new Schema(
 userSchema
 	.virtual(`formatCreatedAt`)
 	.get(function () {
-		return Date(this.createdAt).toLocaleString()
+		return new Intl.DateTimeFormat(`en-US`, {
+			dateStyle: `medium`,
+			timeStyle: `short`,
+		})
+			.format(this.createdAt)
 	})
 
 // Get a user’s friend count.

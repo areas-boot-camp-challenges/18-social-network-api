@@ -25,6 +25,7 @@ const thoughtSchema = new Schema(
 			getters: true,
 			virtuals: true,
 		},
+		id: false,
 	},
 )
 
@@ -32,7 +33,11 @@ const thoughtSchema = new Schema(
 thoughtSchema
 	.virtual(`formatCreatedAt`)
 	.get(function () {
-		return Date(this.createdAt).toLocaleString()
+		return new Intl.DateTimeFormat(`en-US`, {
+			dateStyle: `medium`,
+			timeStyle: `short`,
+		})
+			.format(this.createdAt)
 	})
 
 // Get a thought’s reaction count.
