@@ -14,8 +14,9 @@ async function getUsers(req, res, next) {
 // GET /api/users/:userId (getUser).
 async function getUser(req, res, next) {
 	try {
-		const userId = req.params.userId
-		const user = await User.findOne({ _id: userId })
+		const user = await User.findOne({
+			_id: req.params.userId,
+		})
 		res.status(200).json(user)
 	} catch (err) {
 		next(err)
@@ -25,16 +26,9 @@ async function getUser(req, res, next) {
 // POST /api/users (addUser).
 async function addUser(req, res, next) {
 	try {
-		const {
-			username,
-			email } = req.body
-		if (!username || !email) {
-			return res.status(400).send(`You must submit a username and email.`)
-		}
-		const user = await User.create({
-			username,
-			email,
-		})
+		const user = await User.create(
+			req.body,
+		)
 		res.status(201).json(user)
 	} catch (err) {
 		next(err)
@@ -44,15 +38,8 @@ async function addUser(req, res, next) {
 // PUT /api/users/:userId (updateUser).
 async function updateUser(req, res, next) {
 	try {
-		const userId = req.params.userId
-		const {
-			username,
-			email } = req.body
-		if (!username && !email) {
-			return res.status(400).send(`You must submit a username or email.`)
-		}
 		const user = await User.findOneAndUpdate(
-			{ _id: userId },
+			{ _id: req.params.userId },
 			{ $set: req.body },
 			{ runValidators: true,
 				new: true,
@@ -67,9 +54,8 @@ async function updateUser(req, res, next) {
 // DELETE /api/users/:userId (deleteUser).
 async function deleteUser(req, res, next) {
 	try {
-		const userId = req.params.userId
 		const user = await User.findOneAndRemove({
-			_id: userId,
+			_id: req.params.userId,
 		})
 		res.status(204).send(user)
 	} catch (err) {
@@ -80,11 +66,9 @@ async function deleteUser(req, res, next) {
 // POST /api/users/:userId/friends/:friendId (addFriend).
 async function addFriend(req, res, next) {
 	try {
-		const userId = req.params.userId
-		const friendId = req.params.friendId
 		const user = await User.findOneAndUpdate(
-			{ _id: userId },
-			{ $addToSet: { friends: friendId } },
+			{ _id: req.params.userId },
+			{ $addToSet: { friends: req.params.friendId } },
 			{ new: true },
 		)
 		res.status(200).json(user)
@@ -96,11 +80,9 @@ async function addFriend(req, res, next) {
 // DELETE /api/users/:userId/friends/:friendId (deleteFriend).
 async function deleteFriend(req, res, next) {
 	try {
-		const userId = req.params.userId
-		const friendId = req.params.friendId
 		const user = await User.findOneAndUpdate(
-			{ _id: userId },
-			{ $pull: { friends: friendId } },
+			{ _id: req.params.userId },
+			{ $pull: { friends: req.params.friendId } },
 			{ new: true },
 		)
 		res.status(200).json(user)

@@ -22,6 +22,28 @@ async function validateUserId(err, req, res, next) {
 	next()	
 }
 
+// Validate username and email
+async function validateUsernameAndEmail(err, req, res, next) {
+	const {
+		username,
+		email } = req.body
+	if (!username || !email) {
+		return res.status(400).send(`You must submit a username and email.`)
+	}
+	next()
+}
+
+// Validate username or email
+async function validateUsernameOrEmail(err, req, res, next) {
+	const {
+		username,
+		email } = req.body
+	if (!username && !email) {
+		return res.status(400).send(`You must submit a username or email.`)
+	}
+	next()
+}
+
 // Validate friend ID.
 async function validateFriendId(err, req, res, next) {
 	const friendId = req.params.friendId
@@ -42,5 +64,7 @@ async function validateFriendId(err, req, res, next) {
 
 module.exports = {
 	validateUserId,
+	validateUsernameAndEmail,
+	validateUsernameOrEmail,
 	validateFriendId,
 }

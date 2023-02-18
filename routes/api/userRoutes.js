@@ -4,6 +4,8 @@ const userRouter = require(`express`).Router()
 // Middleware.
 const {
 	validateUserId,
+	validateUsernameAndEmail,
+	validateUsernameOrEmail,
 	validateFriendId,
 } = require(`../../middleware`)
 
@@ -33,11 +35,13 @@ userRouter
 		errorHandler,
 	)
 	.post(`/`,
+		validateUsernameAndEmail,
 		addUser,
 		errorHandler,
 	)
 	.put(`/:userId`,
 		validateUserId,
+		validateUsernameOrEmail,
 		updateUser,
 		errorHandler,
 	)
