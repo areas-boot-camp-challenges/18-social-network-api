@@ -16,9 +16,6 @@ async function getUser(req, res, next) {
 	try {
 		const userId = req.params.userId
 		const user = await User.findOne({ _id: userId })
-		if (!user) {
-			return res.status(404).send(`User not found.`)
-		}
 		res.status(200).json(user)
 	} catch (err) {
 		next(err)
@@ -28,7 +25,9 @@ async function getUser(req, res, next) {
 // POST /api/users (addUser).
 async function addUser(req, res, next) {
 	try {
-		const { username, email } = req.body
+		const {
+			username,
+			email } = req.body
 		if (!username || !email) {
 			return res.status(400).send(`You must submit a username and email.`)
 		}
@@ -45,20 +44,20 @@ async function addUser(req, res, next) {
 // PUT /api/users/:userId (updateUser).
 async function updateUser(req, res, next) {
 	try {
-		const { username, email } = req.body
+		const userId = req.params.userId
+		const {
+			username,
+			email } = req.body
 		if (!username && !email) {
 			return res.status(400).send(`You must submit a username or email.`)
 		}
 		const user = await User.findOneAndUpdate(
-			{ _id: req.params.userId },
+			{ _id: userId },
 			{ $set: req.body },
 			{ runValidators: true,
 				new: true,
 			},
 		)
-		if (!user) {
-			return res.status(404).send(`User not found.`)
-		}
 		res.status(200).json(user)
 	} catch (err) {
 		next(err)
@@ -72,10 +71,7 @@ async function deleteUser(req, res, next) {
 		const user = await User.findOneAndRemove({
 			_id: userId,
 		})
-		if (!user) {
-			return res.status(404).send(`User not found.`)
-		}
-		res.status(204).send()
+		res.status(204).send(user)
 	} catch (err) {
 		next(err)
 	}
@@ -84,7 +80,14 @@ async function deleteUser(req, res, next) {
 // POST /api/users/:userId/friends/:friendId (addFriend).
 async function addFriend(req, res, next) {
 	try {
-		res.send(`addFriend`)
+		const userId = req.params.userId
+		const friendId = req.params.friendId
+		const user = await User.findOneAndUpdate(
+			{ _id: userId },
+			{ $addToSet: { friends: friendId } },
+			{ new: true },
+		)
+		res.status(200).json(user)
 	} catch (err) {
 		next(err)
 	}
@@ -93,7 +96,14 @@ async function addFriend(req, res, next) {
 // DELETE /api/users/:userId/friends/:friendId (deleteFriend).
 async function deleteFriend(req, res, next) {
 	try {
-		res.send(`deleteFriend`)
+		const userId = req.params.userId
+		const friendId = req.params.friendId
+		const user = await User.findOneAndUpdate(
+			{ _id: userId },
+			{ $pull: { friends: friendId } },
+			{ new: true },
+		)
+		res.status(200).json(user)
 	} catch (err) {
 		next(err)
 	}
