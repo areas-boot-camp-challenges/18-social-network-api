@@ -1,7 +1,8 @@
 // Dependencies.
 const userRouter = require(`express`).Router()
-
-// Controllers.
+const {
+	validateUserId,
+} = require(`../../middleware`)
 const {
 	getUsers,
 	getUser,
@@ -11,18 +12,19 @@ const {
 	addFriend,
 	deleteFriend,
 } = require(`../../controllers/userController`)
+const { errorHandler } = require(`../../middleware`)
 
 // User routes.
 userRouter
-	.get(`/`, getUsers)
-	.get(`/:userId`, getUser)
-	.post(`/`, addUser)
-	.put(`/:userId`, updateUser)
-	.delete(`/:userId`, deleteUser)
+	.get(`/`, getUsers, errorHandler)
+	.get(`/:userId`, validateUserId, getUser, errorHandler)
+	.post(`/`, addUser, errorHandler)
+	.put(`/:userId`, updateUser, errorHandler)
+	.delete(`/:userId`, validateUserId, deleteUser, errorHandler)
 
 // Friend routes.
 userRouter
-	.post(`/:userId/friends/:friendId`, addFriend)
-	.delete(`/:userId/friends/:friendId`, deleteFriend)
+	.post(`/:userId/friends/:friendId`, addFriend, errorHandler)
+	.delete(`/:userId/friends/:friendId`, deleteFriend, errorHandler)
 
 module.exports = userRouter
