@@ -5,7 +5,7 @@ const { Types } = require(`mongoose`)
 const { User } = require(`../models`)
 
 // Validate user ID.
-async function validateUserId(err, req, res, next) {
+async function validateUserId(req, res, next) {
 	const userId = req.params.userId
 	if (!userId) {
 		return res.status(400).send(`You must submit a user ID.`)
@@ -23,29 +23,57 @@ async function validateUserId(err, req, res, next) {
 }
 
 // Validate username and email
-async function validateUsernameAndEmail(err, req, res, next) {
+async function validateUsernameAndEmail(req, res, next) {
 	const {
 		username,
 		email } = req.body
 	if (!username || !email) {
 		return res.status(400).send(`You must submit a username and email.`)
 	}
+	const usernameExists = await User.findOne({
+		username,
+	})
+	if (usernameExists) {
+		return res.status(400).send(`Username already exists. You must submit a unique username.`)
+	}
+	const emailExists = await User.findOne({
+		email,
+	})
+	if (emailExists) {
+		return res.status(400).send(`Email already exists. You must submit a unique email.`)
+	}
 	next()
 }
 
 // Validate username or email
-async function validateUsernameOrEmail(err, req, res, next) {
+async function validateUsernameOrEmail(req, res, next) {
 	const {
 		username,
 		email } = req.body
 	if (!username && !email) {
 		return res.status(400).send(`You must submit a username or email.`)
 	}
+	if (username) {
+		const usernameExists = await User.findOne({
+			username,
+		})
+		if (usernameExists) {
+			return res.status(400).send(`Username already exists. You must submit a unique username.`)
+		}	
+	}
+	if (email) {
+		const emailExists = await User.findOne({
+			email,
+		})
+		if (emailExists) {
+			return res.status(400).send(`Email already exists. You must submit a unique email.`)
+		}	
+	}
 	next()
 }
 
 // Validate friend ID.
-async function validateFriendId(err, req, res, next) {
+async function validateFriendId(req, res, next) {
 	const friendId = req.params.friendId
 	if (!friendId) {
 		return res.status(400).send(`You must submit a friend ID.`)
