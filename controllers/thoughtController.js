@@ -1,33 +1,112 @@
 // Models.
+const { User, Thought } = require(`../models`)
 
+// GET /api/thoughts (getThoughts).
+async function getThoughts(req, res, next) {
+	try {
+		const thoughts = await Thought.find({})
+		res.status(200).json(thoughts)
+	} catch (err) {
+		next(err)
+	}
+}
+
+// GET /api/thoughts/:thoughtId (getThought).
+async function getThought(req, res, next) {
+	try {
+		const thought = await Thought.findOne({
+			_id: req.params.thoughtId,
+		})
+		res.status(200).json(thought)
+	} catch (err) {
+		next(err)
+	}
+}
+
+// POST /api/thoughts (addThought).
+async function addThought(req, res, next) {
+	try {
+		const thought = await Thought.create(
+			req.body,
+		)
+		// Todo: Can I use a hook instead? Should I?
+		await User.findOneAndUpdate(
+			{ username: req.body.username },
+			{ $addToSet: { thoughts: thought._id } },
+			{ new: true },
+		)
+		res.status(201).json(thought)
+	} catch (err) {
+		next(err)
+	}
+}
+
+// PUT /api/thoughts/:thoughtId (updateThought).
+async function updateThought(req, res, next) {
+	try {
+		const thought = await Thought.findOneAndUpdate(
+			{ _id: req.params.thoughtId },
+			{ $set: { thoughtText: req.body.thoughtText } },
+			{ new: true },
+		)
+		res.status(200).json(thought)
+	} catch (err) {
+		next(err)
+	}
+}
+
+// DELETE /api/thoughts/:thoughtId deleteThought).
+async function deleteThought(req, res, next) {
+	try {
+		const thought = await Thought.findOneAndRemove({
+			_id: req.params.thoughtId,
+		})
+		// Todo: Can I use a hook instead? Should I?
+		await User.findOneAndUpdate(
+			{ username: thought.username },
+			{ $pull: { thoughts: thought._id } },
+			{ new: true },
+		)
+		res.status(204).send(thought)
+	} catch (err) {
+		next(err)
+	}
+}
+
+// POST /api/thoughts/:thoughtId/reactions/:reactionId (addReaction).
+async function addReaction(req, res, next) {
+	try {
+		const thought = await Thought.findOneAndUpdate(
+			{ _id: req.params.thoughtId },
+			{ $addToSet: { reactions: req.params.reactionId } },
+			{ new: true },
+		)
+		res.status(200).json(thought)
+	} catch (err) {
+		next(err)
+	}
+}
+
+// DELETE /api/thoughts/:thoughtId/reactions/:reactionId (deleteReaction).
+async function deleteReaction(req, res, next) {
+	try {
+		const thought = await Thought.findOneAndUpdate(
+			{ _id: req.params.thoughtId },
+			{ $pull: { reactions: req.params.reactionId } },
+			{ new: true },
+		)
+		res.status(200).json(thought)
+	} catch (err) {
+		next(err)
+	}
+}
 
 module.exports = {
-	// GET /api/thoughts.
-	getThoughts (req, res) {
-		res.send(`getThoughts`)
-	},
-	// GET /api/thoughts/:thoughtId.
-	getThought (req, res) {
-		res.send(`getThought`)
-	},
-	// POST /api/thoughts.
-	addThought (req, res) {
-		res.send(`addThought`)
-	},
-	// PUT /api/thoughts/:thoughtId.
-	updateThought (req, res) {
-		res.send(`updateThought`)
-	},
-	// DELETE /api/thoughts/:thoughtId.
-	deleteThought (req, res) {
-		res.send(`deleteThought`)
-	},
-	// POST /api/thoughts/:thoughtId/reactions/:reactionId.
-	addReaction (req, res) {
-		res.send(`addReaction`)
-	},
-	// DELETE /api/thoughts/:thoughtId/reactions/:reactionId.
-	deleteReaction (req, res) {
-		res.send(`deleteReaction`)
-	},
+	getThoughts,
+	getThought,
+	addThought,
+	updateThought,
+	deleteThought,
+	addReaction,
+	deleteReaction,
 }

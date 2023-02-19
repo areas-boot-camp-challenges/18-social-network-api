@@ -4,7 +4,7 @@ const { Types } = require(`mongoose`)
 // Models.
 const { User } = require(`../models`)
 
-// Validate user ID.
+// Validate user ID (for getUser, updateUser, deleteUser, addFriend, deleteFriend).
 async function validateUserId(req, res, next) {
 	const userId = req.params.userId
 	if (!userId) {
@@ -22,7 +22,7 @@ async function validateUserId(req, res, next) {
 	next()	
 }
 
-// Validate username and email
+// Validate username and email (for addUser).
 async function validateUsernameAndEmail(req, res, next) {
 	const {
 		username,
@@ -31,7 +31,7 @@ async function validateUsernameAndEmail(req, res, next) {
 		return res.status(400).send(`You must submit a username and email.`)
 	}
 	const usernameExists = await User.findOne({
-		username,
+		username: username,
 	})
 	if (usernameExists) {
 		return res.status(400).send(`Username already exists. You must submit a unique username.`)
@@ -45,7 +45,7 @@ async function validateUsernameAndEmail(req, res, next) {
 	next()
 }
 
-// Validate username or email
+// Validate username or email (for updateUser).
 async function validateUsernameOrEmail(req, res, next) {
 	const {
 		username,
@@ -55,7 +55,7 @@ async function validateUsernameOrEmail(req, res, next) {
 	}
 	if (username) {
 		const usernameExists = await User.findOne({
-			username,
+			username: username,
 		})
 		if (usernameExists) {
 			return res.status(400).send(`Username already exists. You must submit a unique username.`)
@@ -63,7 +63,7 @@ async function validateUsernameOrEmail(req, res, next) {
 	}
 	if (email) {
 		const emailExists = await User.findOne({
-			email,
+			email: email,
 		})
 		if (emailExists) {
 			return res.status(400).send(`Email already exists. You must submit a unique email.`)
@@ -72,7 +72,7 @@ async function validateUsernameOrEmail(req, res, next) {
 	next()
 }
 
-// Validate friend ID.
+// Validate friend ID (for addFriend and deleteFriend).
 async function validateFriendId(req, res, next) {
 	const friendId = req.params.friendId
 	if (!friendId) {

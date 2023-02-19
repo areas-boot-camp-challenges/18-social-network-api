@@ -1,6 +1,15 @@
 // Dependencies.
 const thoughtRouter = require(`express`).Router()
 
+// Middleware.
+const {
+	validateThoughtId,
+	validatethoughtTextAndUsername,
+	validatethoughtTextOrUsername,
+	validateReactionId,
+	handleErrors,
+} = require(`../../middleware`)
+
 // Controllers.
 const {
 	getThoughts,
@@ -14,15 +23,45 @@ const {
 
 // Thought routes.
 thoughtRouter
-	.get(`/`, getThoughts)
-	.get(`/:thoughtId`, getThought)
-	.post(`/`, addThought)
-	.put(`/:thoughtId`, updateThought)
-	.delete(`/:thoughtId`, deleteThought)
+	.get(`/`,
+		getThoughts,
+		handleErrors,
+	)
+	.get(`/:thoughtId`,
+		validateThoughtId,
+		getThought,
+		handleErrors,
+	)
+	.post(`/`,
+		validatethoughtTextAndUsername,
+		addThought,
+		handleErrors,
+	)
+	.put(`/:thoughtId`,
+		validateThoughtId,
+		validatethoughtTextOrUsername,
+		updateThought,
+		handleErrors,
+	)
+	.delete(`/:thoughtId`,
+		validateThoughtId,
+		deleteThought,
+		handleErrors,
+	)
 
 // Reaction routes.
 thoughtRouter
-	.post(`/:thoughtId/reactions/:reactionId`, addReaction)
-	.delete(`/:thoughtId/reactions/:reactionId`, deleteReaction)
+	.post(`/:thoughtId/reactions/:reactionId`,
+		validateThoughtId,
+		validateReactionId,
+		addReaction,
+		handleErrors,
+	)
+	.delete(`/:thoughtId/reactions/:reactionId`,
+		validateThoughtId,
+		validateReactionId,
+		deleteReaction,
+		handleErrors,
+	)
 
 module.exports = thoughtRouter

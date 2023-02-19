@@ -7,6 +7,7 @@ const {
 	validateUsernameAndEmail,
 	validateUsernameOrEmail,
 	validateFriendId,
+	handleErrors,
 } = require(`../../middleware`)
 
 // Controllers.
@@ -20,35 +21,32 @@ const {
 	deleteFriend,
 } = require(`../../controllers/userController`)
 
-// Error handler.
-const { errorHandler } = require(`../../middleware`)
-
 // User routes.
 userRouter
 	.get(`/`,
 		getUsers,
-		errorHandler,
+		handleErrors,
 	)
 	.get(`/:userId`,
 		validateUserId,
 		getUser,
-		errorHandler,
+		handleErrors,
 	)
 	.post(`/`,
 		validateUsernameAndEmail,
 		addUser,
-		errorHandler,
+		handleErrors,
 	)
 	.put(`/:userId`,
 		validateUserId,
 		validateUsernameOrEmail,
 		updateUser,
-		errorHandler,
+		handleErrors,
 	)
 	.delete(`/:userId`,
 		validateUserId,
 		deleteUser,
-		errorHandler,
+		handleErrors,
 	)
 
 // Friend routes.
@@ -57,13 +55,13 @@ userRouter
 		validateUserId,
 		validateFriendId,
 		addFriend,
-		errorHandler,
+		handleErrors,
 	)
 	.delete(`/:userId/friends/:friendId`,
 		validateUserId,
 		validateFriendId,
 		deleteFriend,
-		errorHandler,
+		handleErrors,
 	)
 
 module.exports = userRouter
