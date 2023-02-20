@@ -14,18 +14,20 @@ const userSchema = new Schema(
 			type: String,
 			required: true,
 			unique: true,
+			trim: true,
+			lowercase: true,
 			match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*\.\w{2,}$/],
 		},
-		thoughts: [
-			{
-				type: Schema.Types.ObjectId,
-				ref: `Thought`,
-			},
-		],
 		friends: [
 			{
 				type: Schema.Types.ObjectId,
 				ref: `User`,
+			},
+		],
+		thoughts: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: `Thought`,
 			},
 		],
 	},
@@ -35,14 +37,19 @@ const userSchema = new Schema(
 			getters: true,
 			virtuals: true,
 		},
+		id: false,
 	},
 )
 
 // Format createdAt.
 userSchema
-	.virtual(`formatCreatedAt`)
+	.virtual(`createdAtFormatted`)
 	.get(function () {
-		return Date(this.createdAt).toLocaleString()
+		return new Intl.DateTimeFormat(`en-US`, {
+			dateStyle: `medium`,
+			timeStyle: `short`,
+		})
+			.format(this.createdAt)
 	})
 
 // Get a user’s friend count.
