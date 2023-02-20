@@ -30,7 +30,7 @@ const reactionSchema = new Schema(
 
 // Format createdAt.
 reactionSchema
-	.virtual(`formatCreatedAt`)
+	.virtual(`createdAtFormatted`)
 	.get(function () {
 		return Date(this.createdAt).toLocaleString()
 	})

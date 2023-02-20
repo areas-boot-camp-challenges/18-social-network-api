@@ -43,7 +43,7 @@ const userSchema = new Schema(
 
 // Format createdAt.
 userSchema
-	.virtual(`formatCreatedAt`)
+	.virtual(`createdAtFormatted`)
 	.get(function () {
 		return new Intl.DateTimeFormat(`en-US`, {
 			dateStyle: `medium`,

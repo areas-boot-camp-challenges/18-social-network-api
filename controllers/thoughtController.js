@@ -76,7 +76,6 @@ async function deleteThought(req, res, next) {
 // POST /api/thoughts/:thoughtId/reactions (addReaction).
 async function addReaction(req, res, next) {
 	try {
-		// To-do: Validate reactionBody and username.
 		const thought = await Thought.findOneAndUpdate(
 			{ "_id": req.params.thoughtId },
 			{ $addToSet: { reactions: req.body } },

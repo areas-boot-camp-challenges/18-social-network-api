@@ -34,7 +34,7 @@ async function validatethoughtTextAndUsername(req, res, next) {
 		username: username,
 	})
 	if (!usernameExists) {
-		return res.status(400).send(`User not found. You must submit a username that exists.`)
+		return res.status(400).send(`User not found.`)
 	}
 	next()
 }
@@ -48,8 +48,45 @@ async function validatethoughtTextOrUsername(req, res, next) {
 	next()
 }
 
+// Validate reactionBody and username (for addReaction).
+async function validateReactionBodyAndUsername(req, res, next) {
+	const {
+		reactionBody,
+		username } = req.body
+	if (!reactionBody || !username) {
+		return res.status(400).send(`You must submit a reaction and username.`)
+	}
+	const usernameExists = await User.findOne({
+		username: username,
+	})
+	if (!usernameExists) {
+		return res.status(400).send(`User not found.`)
+	}
+	next()
+}
+
+// Validate reactionId (for deleteReaction).
+async function validateReactionId(req, res, next) {
+	const reactionId = req.params.reactionId
+	if (!reactionId) {
+		return res.status(400).send(`You must submit a reaction ID.`)
+	}
+	if (!Types.ObjectId.isValid(reactionId)) {
+		return res.status(400).send(`You must submit a valid reaction ID.`)
+	}
+	const reaction = await Thought.findOne({
+		"reactions.reactionId": reactionId,
+	})
+	if (!reaction) {
+		return res.status(404).send(`Reaction not found.`)
+	}
+	next()	
+}
+
 module.exports = {
 	validateThoughtId,
 	validatethoughtTextAndUsername,
 	validatethoughtTextOrUsername,
+	validateReactionBodyAndUsername,
+	validateReactionId,
 }

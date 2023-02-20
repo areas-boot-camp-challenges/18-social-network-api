@@ -31,7 +31,7 @@ const thoughtSchema = new Schema(
 
 // Format createdAt.
 thoughtSchema
-	.virtual(`formatCreatedAt`)
+	.virtual(`createdAtFormatted`)
 	.get(function () {
 		return new Intl.DateTimeFormat(`en-US`, {
 			dateStyle: `medium`,

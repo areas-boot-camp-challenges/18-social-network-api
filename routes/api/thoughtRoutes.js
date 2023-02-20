@@ -6,6 +6,8 @@ const {
 	validateThoughtId,
 	validatethoughtTextAndUsername,
 	validatethoughtTextOrUsername,
+	validateReactionBodyAndUsername,
+	validateReactionId,
 	handleErrors,
 } = require(`../../middleware`)
 
@@ -52,11 +54,13 @@ thoughtRouter
 thoughtRouter
 	.post(`/:thoughtId/reactions`,
 		validateThoughtId,
+		validateReactionBodyAndUsername,
 		addReaction,
 		handleErrors,
 	)
 	.delete(`/:thoughtId/reactions/:reactionId`,
 		validateThoughtId,
+		validateReactionId,
 		deleteReaction,
 		handleErrors,
 	)
