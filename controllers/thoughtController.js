@@ -15,7 +15,7 @@ async function getThoughts(req, res, next) {
 async function getThought(req, res, next) {
 	try {
 		const thought = await Thought.findOne({
-			_id: req.params.thoughtId,
+			"_id": req.params.thoughtId,
 		})
 		res.status(200).json(thought)
 	} catch (err) {
@@ -29,9 +29,9 @@ async function addThought(req, res, next) {
 		const thought = await Thought.create(
 			req.body,
 		)
-		// Todo: Can I use a hook instead? Should I?
+		// Add the thought to the user's thoughts.
 		await User.findOneAndUpdate(
-			{ username: req.body.username },
+			{ "username": req.body.username },
 			{ $addToSet: { thoughts: thought._id } },
 			{ new: true },
 		)
@@ -45,7 +45,7 @@ async function addThought(req, res, next) {
 async function updateThought(req, res, next) {
 	try {
 		const thought = await Thought.findOneAndUpdate(
-			{ _id: req.params.thoughtId },
+			{ "_id": req.params.thoughtId },
 			{ $set: { thoughtText: req.body.thoughtText } },
 			{ new: true },
 		)
@@ -59,11 +59,11 @@ async function updateThought(req, res, next) {
 async function deleteThought(req, res, next) {
 	try {
 		const thought = await Thought.findOneAndRemove({
-			_id: req.params.thoughtId,
+			"_id": req.params.thoughtId,
 		})
-		// Todo: Can I use a hook instead? Should I?
+		// Remove the thought from the user's thoughts.
 		await User.findOneAndUpdate(
-			{ username: thought.username },
+			{ "username": thought.username },
 			{ $pull: { thoughts: thought._id } },
 			{ new: true },
 		)
@@ -73,12 +73,13 @@ async function deleteThought(req, res, next) {
 	}
 }
 
-// POST /api/thoughts/:thoughtId/reactions/:reactionId (addReaction).
+// POST /api/thoughts/:thoughtId/reactions (addReaction).
 async function addReaction(req, res, next) {
 	try {
+		// To-do: Validate reactionBody and username.
 		const thought = await Thought.findOneAndUpdate(
-			{ _id: req.params.thoughtId },
-			{ $addToSet: { reactions: req.params.reactionId } },
+			{ "_id": req.params.thoughtId },
+			{ $addToSet: { reactions: req.body } },
 			{ new: true },
 		)
 		res.status(200).json(thought)
@@ -90,9 +91,10 @@ async function addReaction(req, res, next) {
 // DELETE /api/thoughts/:thoughtId/reactions/:reactionId (deleteReaction).
 async function deleteReaction(req, res, next) {
 	try {
+		// To-do: Validate reactionId.
 		const thought = await Thought.findOneAndUpdate(
-			{ _id: req.params.thoughtId },
-			{ $pull: { reactions: req.params.reactionId } },
+			{ "_id": req.params.thoughtId },
+			{ $pull: { reactions: { reactionId: req.params.reactionId } } },
 			{ new: true },
 		)
 		res.status(200).json(thought)

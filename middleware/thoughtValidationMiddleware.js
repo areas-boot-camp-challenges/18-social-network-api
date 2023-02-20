@@ -48,27 +48,8 @@ async function validatethoughtTextOrUsername(req, res, next) {
 	next()
 }
 
-// Validate reaction ID (for addReaction, deleteReaction).
-async function validateReactionId(req, res, next) {
-	const reactionId = req.params.reactionId
-	if (!reactionId) {
-		return res.status(400).send(`You must submit a reaction ID.`)
-	}
-	if (!Types.ObjectId.isValid(reactionId)) {
-		return res.status(400).send(`You must submit a valid reactionId ID.`)
-	}
-	const reaction = await Thought.findOne({
-		_id: reactionId,
-	})
-	if (!reaction) {
-		return res.status(404).send(`Reaction not found.`)
-	}
-	next()	
-}
-
 module.exports = {
 	validateThoughtId,
 	validatethoughtTextAndUsername,
 	validatethoughtTextOrUsername,
-	validateReactionId,
 }

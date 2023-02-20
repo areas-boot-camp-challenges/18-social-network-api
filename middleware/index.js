@@ -11,7 +11,6 @@ const {
 	validateThoughtId,
 	validatethoughtTextAndUsername,
 	validatethoughtTextOrUsername,
-	validateReactionId,
 } = require(`./thoughtValidationMiddleware`)
 
 // Errors.
@@ -25,6 +24,5 @@ module.exports = {
 	validateThoughtId,
 	validatethoughtTextAndUsername,
 	validatethoughtTextOrUsername,
-	validateReactionId,
 	handleErrors,
 }
