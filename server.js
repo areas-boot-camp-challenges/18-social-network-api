@@ -20,14 +20,9 @@ app.use(express.urlencoded({ extended: true }))
 // Set up the routes.
 app.use(routes)
 
-// Log any database connection errors.
-db.on(`error`, (error) => {
-	console.log(error)
-})
-
 // Start the server.
 db.once(`open`, () => {
 	app.listen(PORT, () => {
-		console.log(`API server’s listening at http://localhost:${PORT}! 🚀`)
+		console.log(`The API server’s listening at http://localhost:${PORT}! 🚀`)
 	})
 })
