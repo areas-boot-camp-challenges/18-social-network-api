@@ -14,7 +14,7 @@ mongoose.connect(`mongodb://127.0.0.1:27017/${db}`,
 	(err) => {
 		// Log any database connection errors.
 		if (err) {
-			console.log(err)
+			console.error(err)
 		// Otherwise, log a success message.
 		} else {
 			console.log(`Connected to the ${db} database! ✅`)

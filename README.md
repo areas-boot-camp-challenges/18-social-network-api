@@ -1,6 +1,6 @@
 # Social Network API
 ## Description
-An API to start your own social network!
+An API to start your own social network! Watch the [walkthrough video](https://drive.google.com/file/d/1RkNTh_6keZ6dT1vVYOXjEAGc58Jv17rP/view).
 
 <!-- if appropriate, add a screenshot ![image-alt](image-url) -->
 
