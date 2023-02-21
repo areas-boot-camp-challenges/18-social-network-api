@@ -79,6 +79,11 @@ async function deleteUser(req, res, next) {
 		await Thought.deleteMany({
 			"username": user.username,
 		})
+		// Delete the user's reactions.
+		const test = await Thought.updateMany(
+			{ "reactions.username": user.username },
+			{ $pull: { "reactions": { "username": user.username } } },
+		)
 		res.status(204).send(user)
 	} catch (err) {
 		next(err)
